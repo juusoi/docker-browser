@@ -1,6 +1,2 @@
-Appium-Python-Client
-decorator
-pytz
 robotframework
 robotframework-browser
-robotframework-appiumlibrary
