@@ -35,14 +35,14 @@ RUN apt-get update && \
     libatk-bridge2.0-0 \
     libepoxy0 \
     libgtk-3-0 \
-    libharfbuzz-icu0
+    libharfbuzz-icu0 && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN TZ=Europe/Helsinki && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN groupadd -r -g 1000 robotuser && \
     useradd -u 1000 -r -g robotuser robotuser  && \
-    mkdir -p /robot && \
     mkdir -p /robot/reports && \
     mkdir -p /home/robotuser && \
     chown -R robotuser:robotuser /robot && \
