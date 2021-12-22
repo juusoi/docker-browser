@@ -1,10 +1,14 @@
-FROM python:3.9-slim-buster
+# syntax=docker/dockerfile:1
+
+FROM python:3.10.1-slim-buster
 
 WORKDIR /robot
 
+ENV NODE_VERSION 16.x
+
 RUN apt-get update && \
     apt-get install -yqq curl && \
-    curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
+    curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION} | bash - && \
     apt-get update && \
     apt-get install -yqq nodejs \
     gcc \
