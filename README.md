@@ -1,5 +1,5 @@
 # rfbrowser-slim
-A simple docker python image with nodejs, robotframework and robotframework-browser
+A simple python image with nodejs, robotframework and robotframework-browser
 ## Usage 
 `docker build -t test .`
 
