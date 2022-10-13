@@ -1,19 +1,17 @@
 # syntax=docker/dockerfile:1
-
-FROM python:3.10.1-slim-buster
+FROM python:slim
 
 WORKDIR /robot
 
-ENV NODE_VERSION 16.x
+ARG DEBIAN_FRONTEND noninteractive
+ENV NODE_VERSION 18.x
 
 RUN apt-get update && \
-    apt-get install -yqq curl && \
+    apt-get install -yqq --no-install-recommends curl && \
     curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION} | bash - && \
     apt-get update && \
-    apt-get install -yqq nodejs \
-    gcc \
-    g++ \
-    curl \
+    apt-get install -yqq --no-install-recommends \
+    nodejs \
     libnss3 \
     libxss1 \
     libasound2 \
@@ -23,7 +21,6 @@ RUN apt-get update && \
     libopus0 \
     libwebp6 \
     libwebpdemux2 \
-    libenchant1c2a \
     libgudev-1.0-0 \
     libsecret-1-0 \
     libhyphen0 \
@@ -31,15 +28,18 @@ RUN apt-get update && \
     libegl1 \
     libnotify4 \
     libxslt1.1 \
-    libevent-2.1-6 \
+    libevent-2.1-7 \
     libgles2 \
-    libvpx5 \
     libxcomposite1 \
     libatk1.0-0 \
     libatk-bridge2.0-0 \
     libepoxy0 \
     libgtk-3-0 \
     libharfbuzz-icu0 && \
+    apt-get purge -y curl && \
+    apt-get autoremove -y && \
+    apt-get autoclean -y && \
+    apt-get clean -y && \
     rm -rf /var/lib/apt/lists/*
 
 RUN TZ=Europe/Helsinki && \
@@ -55,9 +55,11 @@ RUN groupadd -r -g 1000 robotuser && \
 USER robotuser
 
 COPY requirements.txt .
-RUN pip3 install --no-cache-dir -r requirements.txt 
+RUN pip3 install --no-cache-dir --no-warn-script-location -r requirements.txt && \
+    rm -rf requirements.txt
 
-RUN ~/.local/bin/rfbrowser init
+RUN ~/.local/bin/rfbrowser init && \
+    npm cache clean --force
 
 ENV NODE_PATH=/usr/lib/node_modules
 ENV PATH="/home/robotuser/.local/bin:${PATH}"
